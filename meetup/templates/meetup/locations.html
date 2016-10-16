@@ -1,0 +1,15 @@
+{% extends "meetup/base.html"%}
+{% block content %}
+
+{% if gathering_locations %}
+	<div>
+	{% for location in gathering_locations %}
+		<h4><a href="{{ location.href }}">{{ location.location_name }}</a></h4>  <!-- temporary href -->
+		<p>{{ location.location_address }}</p>
+	{% endfor %}
+	</div>
+{% else %}
+	<p>No location found.</p>
+{% endif %}
+
+{% endblock %}

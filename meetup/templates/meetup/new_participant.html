@@ -1,0 +1,94 @@
+{% extends "meetup/base.html" %}
+{% block content %}
+
+<div class="row">
+	<div class="col-md-6">
+		<div id="map"></div>
+	</div>
+  
+	<div class="col-md-6">
+		<form action="./" method="post">
+			{% csrf_token %}
+			<!-- {{ participant_form }} -->
+			<div class="form-group">
+				<label for="InputName">Name</label>
+				<li class="form-control" id="InputName" placeholder="Name">{{ participant_form.participant_name }}</li>
+			</div>
+			<div class="form-group">
+				<label for="InputEmail">Email</label>
+				<li class="form-control" id="InputEmail" placeholder="Email">{{ participant_form.participant_email }}</li>
+			</div>
+			<div class="form-group">
+				<label for="InputMessage">Message</label>
+				<li class="form-control" id="InputMessage" placeholder="Message">{{ participant_form.participant_message }}</li>
+			</div>
+			<div class="form-group">
+				<label for="InputStreet">Street</label>
+				<li class="form-control" id="InputStreet" placeholder="Street">{{ participant_form.street_name }}</li>
+			</div>
+			<div class="form-group">
+				<label for="InputPostalCode">Postal code</label>
+				<li class="form-control" id="InputPostalCode" placeholder="PostalCode">{{ participant_form.postal_code }}</li>
+			</div>
+			<div class="form-group">
+				<label for="InputCity">City</label>
+				<li class="form-control" id="InputCity" placeholder="City">{{ participant_form.city }}</li>
+			</div>
+			<div class="form-group">
+				<label for="InputCountry">Country</label>
+				<li class="form-control" id="InputCountry" placeholder="Country">{{ participant_form.country }}</li>
+			</div>
+			<input type="submit" value="Join" class="btn btn-lg btn-success"/>
+		</form>  
+	</div>
+</div>
+
+<script>
+  // Note: This example requires that you consent to location sharing when
+  // prompted by your browser. If you see the error "The Geolocation service
+  // failed.", it means you probably did not give permission for the browser to
+  // locate you.
+
+  function initMap() {
+	var map = new google.maps.Map(document.getElementById('map'), {
+	  center: {lat: -34.397, lng: 150.644},
+	  //zoom: 6
+	  zoom: 16
+	});
+	var infoWindow = new google.maps.InfoWindow({map: map});
+
+	// Try HTML5 geolocation.
+	if (navigator.geolocation) {
+	  navigator.geolocation.getCurrentPosition(function(position) {
+		var pos = {
+		  lat: position.coords.latitude,
+		  lng: position.coords.longitude
+		};
+
+		infoWindow.setPosition(pos);
+		infoWindow.setContent('Location found.');
+		map.setCenter(pos);
+	  }, function() {
+		handleLocationError(true, infoWindow, map.getCenter());
+	  });
+	} else {
+	  // Browser doesn't support Geolocation
+	  handleLocationError(false, infoWindow, map.getCenter());
+	}
+  }
+
+  function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+	infoWindow.setPosition(pos);
+	infoWindow.setContent(browserHasGeolocation ?
+						  'Error: The Geolocation service failed.' :
+						  'Error: Your browser doesn\'t support geolocation.');
+  }
+</script>
+<script async defer 
+src="https://maps.googleapis.com/maps/api/js?key=AIzaSyApI6kqh3c2bsxUuejRh7dNwRBDKyw0mxA&callback=initMap">
+</script>	
+
+
+
+
+{% endblock %}

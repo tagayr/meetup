@@ -1,0 +1,14 @@
+{% extends "meetup/base.html" %}
+
+{% block content %}
+	<form action="./" method="post">
+		{% csrf_token %}
+		<!-- {{ join_event_form }} -->
+		<div class="form-group">
+			<label for="InputJoinEvent">Event key</label>
+			<li class="form-control" id="InputJoinEvent" placeholder="JoinEvent">{{ join_event_form.event_key }}</li>
+		</div>
+		<input type="submit" value="Join" class="btn btn-lg btn-success"/>
+	</form>
+
+{% endblock %}

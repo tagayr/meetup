@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+
+<html>
+	<head>
+		<title>Night out planner beta version</title>
+		
+		{% load staticfiles %}
+		<link rel="stylesheet" type="text/css" href="{% static 'polls/style.css' %}"
+	</head>
+	<body>
+		{% if latest_questions_list %}
+			<ul>
+			{% for question in latest_questions_list %}
+				<li><a href="{% url 'polls:detail' question.id %}">{{ question.question_text }}</a></li>
+			{% endfor %}
+			</ul>
+		{% else %}
+			<p>There are unfortunately no questions available.</p>
+		{% endif %}
+	</body>
+</html>

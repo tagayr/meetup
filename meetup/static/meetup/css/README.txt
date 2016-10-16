@@ -1,0 +1,1 @@
+stylesheet.css is originally named jumbotron-narrow.css

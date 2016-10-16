@@ -40,6 +40,7 @@ class Event(models.Model):
         random_key = ''.join(random.choice(chars) for _ in range(size))
         self.event_key = random_key
 
+    # basic centroid calculation method
     def get_centroid(self):
         sum_lat = 0
         sum_long = 0
@@ -58,6 +59,8 @@ class Event(models.Model):
         print("================ long", centroid["long"])
 
         return centroid
+
+    # insert a more elaborate centroid calculation method here !
 
     def get_gathering_locations(self):
 

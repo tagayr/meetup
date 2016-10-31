@@ -129,7 +129,7 @@ class Participant(models.Model):
     # Participant details
     participant_name = models.CharField(max_length=50, null=True)
     participant_email = models.EmailField(default="john@doe.com")
-    participant_message = models.CharField(max_length=200, default='')
+    # participant_message = models.CharField(max_length=200, default='')
 
     # Participant address details
     # street_number = models.IntegerField(default=1)

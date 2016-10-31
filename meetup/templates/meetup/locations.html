@@ -4,7 +4,7 @@
 {% if gathering_locations %}
 	<div>
 	{% for location in gathering_locations %}
-		<h4><a href="{{ location.href }}">{{ location.location_name }}</a></h4>  <!-- temporary href -->
+		<h4><a target="_blank" href="{{ location.href }}">{{ location.location_name }}</a></h4>  <!-- temporary href -->
 		<p>{{ location.location_address }}</p>
 	{% endfor %}
 	</div>

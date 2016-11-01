@@ -1,12 +1,13 @@
 {% extends "meetup/base.html" %}
-
 {% block content %}
+{% load bootstrap3 %}
+
 	<form action="./" method="post">
 		{% csrf_token %}
 		<!-- {{ join_event_form }} -->
 		<div class="form-group">
 			<label for="InputJoinEvent">Event key</label>
-			<li class="form-control" id="InputJoinEvent" placeholder="JoinEvent">{{ join_event_form.event_key }}</li>
+			<p id="InputJoinEvent" placeholder="JoinEvent">{% bootstrap_field join_event_form.event_key show_label=False %}</p>
 		</div>
 		<input type="submit" value="Join" class="btn btn-lg btn-success"/>
 	</form>

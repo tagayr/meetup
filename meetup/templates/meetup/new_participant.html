@@ -1,5 +1,6 @@
 {% extends "meetup/base.html" %}
 {% block content %}
+{% load bootstrap3 %}
 
 <div class="row">
 	<div class="col-md-6">
@@ -12,27 +13,27 @@
 			<!-- {{ participant_form }} -->
 			<div class="form-group">
 				<label for="InputName">Name</label>
-				<li class="form-control" id="InputName" placeholder="Name">{{ participant_form.participant_name }}</li>
+				<p id="InputName" placeholder="Name">{% bootstrap_field participant_form.participant_name show_label=False %}</p>
 			</div>
 			<div class="form-group">
 				<label for="InputEmail">Email</label>
-				<li class="form-control" id="InputEmail" placeholder="Email">{{ participant_form.participant_email }}</li>
+				<p id="InputEmail" placeholder="Email">{% bootstrap_field participant_form.participant_email show_label=False %}</p>
 			</div>
 			<div class="form-group">
 				<label for="InputStreet">Street</label>
-				<li class="form-control" id="InputStreet" placeholder="Street">{{ participant_form.street_name }}</li>
+				<p id="InputStreet" placeholder="Street">{% bootstrap_field participant_form.street_name show_label=False %}</p>
 			</div>
 			<div class="form-group">
 				<label for="InputPostalCode">Postal code</label>
-				<li class="form-control" id="InputPostalCode" placeholder="PostalCode">{{ participant_form.postal_code }}</li>
+				<p id="InputPostalCode" placeholder="PostalCode">{% bootstrap_field participant_form.postal_code show_label=False %}</p>
 			</div>
 			<div class="form-group">
 				<label for="InputCity">City</label>
-				<li class="form-control" id="InputCity" placeholder="City">{{ participant_form.city }}</li>
+				<p id="InputCity" placeholder="City">{% bootstrap_field participant_form.city show_label=False %}</p>
 			</div>
 			<div class="form-group">
 				<label for="InputCountry">Country</label>
-				<li class="form-control" id="InputCountry" placeholder="Country">{{ participant_form.country }}</li>
+				<p id="InputCountry" placeholder="Country">{% bootstrap_field participant_form.country show_label=False %}</p>
 			</div>
 			<input type="submit" value="Join" class="btn btn-lg btn-success"/>
 		</form>  

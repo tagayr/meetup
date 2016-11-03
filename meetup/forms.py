@@ -34,6 +34,12 @@ class ParticipantForm(ModelForm):
         # self.fields["participant_name"].help_text = "Please enter your name."
 
 
+class ParticipantReducedForm(ModelForm):
+    class Meta:
+        model = Participant
+        fields = ['participant_name', 'participant_email']
+
+
 class JoinEventForm(ModelForm):
 
     class Meta:

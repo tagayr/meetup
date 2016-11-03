@@ -4,7 +4,7 @@ from django.core.urlresolvers import reverse
 from django.template import loader
 from django.http import Http404
 from django.views import generic
-from .forms import EventForm, ParticipantForm, JoinEventForm
+from .forms import EventForm, ParticipantForm, JoinEventForm, ParticipantReducedForm
 
 from .models import Event, GatheringLocation, Address
 
@@ -70,6 +70,32 @@ def new_participant(request, event_id):
            'participant_form': participant_form
         }
         return render(request, "meetup/new_participant.html", context)
+
+
+def new_participant2(request, event_id):
+    # new attempt with one single address bar
+    if request.method == 'POST':
+        event = Event.objects.get(pk=event_id)
+        participant_form = ParticipantReducedForm(request.POST)
+
+        # check validity of participant -- <form action="{% url 'meetup:new_participant' event_id %}" method="post">
+        print("=================" + str(participant_form.is_valid()))
+        if participant_form.is_valid():
+            participant = participant_form.save(commit=False)
+            participant.event = event
+            address_google = request.POST.get("googleaddress", "")
+            participant.full_address = address_google
+            participant.save()
+            participant.set_address()
+
+            return HttpResponseRedirect(reverse("meetup:detail", args=(event_id,)))
+
+    else:
+        participant_form = ParticipantForm()
+        context = {
+           'participant_form': participant_form
+        }
+        return render(request, "meetup/new_participant2.html", context)
 
 
 def join_event(request):

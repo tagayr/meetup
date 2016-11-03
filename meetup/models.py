@@ -138,6 +138,8 @@ class Participant(models.Model):
     city = models.CharField(max_length=50, null=True)
     country = models.CharField(max_length=50, default='France')
 
+    full_address = models.CharField(max_length=200, null=True)
+
     # latitude and longitude are probably not needed for participant
     latitude = models.DecimalField(default=0.0, max_digits=20, decimal_places=17)
     longitude = models.DecimalField(default=0.0, max_digits=20, decimal_places=17)
@@ -150,7 +152,7 @@ class Participant(models.Model):
 
     def set_address(self):
         address = Address(event=self.event, street_name=self.street_name, city=self.city,
-                          postal_code=self.postal_code, country=self.country,
+                          postal_code=self.postal_code, country=self.country, full_address=self.full_address,
                           address_type="PA")
 
         address.get_lat_long()
@@ -179,6 +181,8 @@ class Address(models.Model):
     city = models.CharField(max_length=50, null=True)
     country = models.CharField(max_length=50, default='France')
 
+    full_address = models.CharField(max_length=200, null=True)
+
     latitude = models.DecimalField(default=0.0, max_digits=20, decimal_places=17)
     longitude = models.DecimalField(default=0.0, max_digits=20, decimal_places=17)
 
@@ -201,7 +205,12 @@ class Address(models.Model):
     # 1600+Amphitheatre+Parkway,+Mountain+View,+CA&key=AIzaSyDcddwoJvWCirP_S9GjbCIVu5V8OjtKMRM
 
     def geolocate(self):
-        address_in_url = self.street_name + "+" + self.postal_code + "+" + self.city + "+" + self.country
+
+        if self.full_address != "":
+            address_in_url = self.full_address
+        else:
+            address_in_url = self.street_name + "+" + self.postal_code + "+" + self.city + "+" + self.country
+
         address_in_url.replace(' ', '+')
         url = "https://maps.googleapis.com/maps/api/geocode/json?address=" + address_in_url \
               + "&key=AIzaSyDcddwoJvWCirP_S9GjbCIVu5V8OjtKMRM"

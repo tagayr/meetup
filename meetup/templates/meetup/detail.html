@@ -7,7 +7,9 @@
 	<p>Created on: {{event.created_on}}</p>
 	<p>To invite your friends, share the following key:</p>
 	<h2>{{event.event_key}}</h2>
-	<p><a class="btn btn-lg btn-success" href="{% url 'meetup:new_participant' event.id %}" role="button">Join event</a></p>
+	<!-- <p><a class="btn btn-lg btn-success" href="{% url 'meetup:new_participant' event.id %}" role="button">Join event</a></p> -->
+	<!-- testing new participant view with one address bar -->
+	<p><a class="btn btn-lg btn-success" href="{% url 'meetup:new_participant2' event.id %}" role="button">Join event</a></p>
 	<p><a class="btn btn-lg btn-primary" href="{% url 'meetup:gathering_locations' event.id %}" role="button">Suggest locations</a></p>
 </div>
 
@@ -19,7 +21,11 @@
 			<h3>{{ event.participant_set.count }} participants</h3>
 			{% for participant in event.participant_set.all%}
 				<h4>{{ participant.participant_name }}</h4>
-				<p>{{ participant.participant_address }}</p>
+				{% if participant.full_address %}
+					<p>{{ participant.full_address }}</p>
+				{% else %}
+					<p>{{ participant.participant_address }}</p>
+				{% endif %}	
 			{% endfor %}
 			<!-- Add informative message in case there is no participant! -->
 		{% endif %}

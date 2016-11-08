@@ -41,6 +41,7 @@ def new_event(request):
 
 
 def new_participant(request, event_id):
+    # this view is DEPRECATED
     if request.method == 'POST':
         event = Event.objects.get(pk=event_id)
         # print('==========================' + event_id)
@@ -78,8 +79,6 @@ def new_participant2(request, event_id):
         event = Event.objects.get(pk=event_id)
         participant_form = ParticipantReducedForm(request.POST)
 
-        # check validity of participant -- <form action="{% url 'meetup:new_participant' event_id %}" method="post">
-        print("=================" + str(participant_form.is_valid()))
         if participant_form.is_valid():
             participant = participant_form.save(commit=False)
             participant.event = event

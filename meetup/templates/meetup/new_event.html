@@ -1,26 +1,28 @@
 {% extends "meetup/base.html" %}
 {% block content %}
+{% load bootstrap3 %}
 
 <div>
 	<!-- <p>FORMULARIO</p> -->
 	<form action="{% url 'meetup:new_event' %}" method="post">
 		<ul class="list-group">
 			{% csrf_token %}
-			<!-- {{ form }} -->
 			<div class="form-group">
 				<label for="InputEventName">Event name</label>
-				<li class="form-control" id="InputEventName" placeholder="EventName">{{ form.event_name }}</li>
+				<p id="InputEventName" placeholder="EventName">{% bootstrap_field form.event_name show_label=False%}</p> <!--remove class="form-control" to use bootstrap-->
 			</div>
-			<div class="form-group">
+			<div class="form-group">			
 				<label for="InputEventType">Event type</label>
-				<li class="form-control" id="InputEventType" placeholder="EventType">{{ form.event_type }}</li>
+				<p id="InputEventType" placeholder="EventType">{% bootstrap_field form.event_type show_label=False %}</p>
 			</div>
 			<div class="form-group">
 				<label for="InputPlannedDate">Planned date</label>
-				<li class="form-control" id="InputPlannedDate" placeholder="PlannedDate">{{ form.event_datetime }}</li>
+				<p id="InputPlannedDate" placeholder="PlannedDate">{% bootstrap_field form.event_datetime show_label=False %}</p>
 			</div>
 		</ul>
-		<input type="submit" value="Create" class="btn btn-lg btn-success"/>
+		<div class="jumbotron">
+			<input type="submit" value="Create" class="btn btn-lg btn-success"/>
+		</div>
 	</form>
 </div>
 

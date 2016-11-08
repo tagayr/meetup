@@ -1,0 +1,208 @@
+{% extends "meetup/base.html" %}
+{% block content %}
+{% load bootstrap3 %}
+
+
+<div class="row">
+	<div class="col-md-6">
+		<div id="map"></div>
+	</div>
+  
+	<div class="col-md-6" id="address">
+		<form action="./" method="post">
+			{% csrf_token %}
+			<div class="form-group">
+				<label for="InputName">Name</label>
+				<p id="InputName" placeholder="Name">{% bootstrap_field participant_form.participant_name show_label=False %}</p>
+			</div>
+			<div class="form-group">
+				<label for="InputEmail">Email</label>
+				<p id="InputEmail" placeholder="Email">{% bootstrap_field participant_form.participant_email show_label=False %}</p>
+			</div>
+			<!-- These fields are no longer required 
+			<div class="form-group">
+				<label for="InputStreet">Street</label>
+				<p id="InputStreet" placeholder="Street">{% bootstrap_field participant_form.street_name show_label=False %}</p>
+			</div>
+			<div class="form-group">
+				<label for="InputPostalCode">Postal code</label>
+				<p id="InputPostalCode" placeholder="PostalCode">{% bootstrap_field participant_form.postal_code show_label=False %}</p>
+			</div>
+			<div class="form-group">
+				<label for="InputCity">City</label>
+				<p id="InputCity" placeholder="City">{% bootstrap_field participant_form.city show_label=False %}</p>
+			</div>
+			<div class="form-group">
+				<label for="InputCountry">Country</label>
+				<p id="InputCountry" placeholder="Country">{% bootstrap_field participant_form.country show_label=False %}</p>
+			</div>
+			-->
+			
+			<!-- AUTOCOMPLETE ADDRESS FORM -->
+			<div class="form-group" id="locationField">
+				<label for="autocomplete">Address</label>
+				<input name="googleaddress" class="form-control" id="autocomplete" placeholder="Enter your address" onFocus="geolocate()" type="text"></input>
+			</div>
+
+			<div class="jumbotron">
+				<div class="row">
+					<input type="submit" value="Join" class="btn btn-lg btn-success"/>
+				</div>	
+			</div>
+			
+		</form>  
+	</div>
+</div>
+
+
+
+<!-- FIELDS COMPLETED WTIH ADDRESS FIELD CONTENT
+<table id="address">
+  <tr>
+	<td><input class="field" id="street_number" disabled="true"></input></td>
+	<td><input class="field" id="route" disabled="true"></input></td>
+  </tr>
+  <tr>
+	<td><input class="field" id="locality" disabled="true"></input></td>
+  </tr>
+  <tr>
+	<td><input class="field" id="administrative_area_level_1" disabled="true"></input></td>
+	<td><input class="field" id="postal_code" disabled="true"></input></td>
+  </tr>
+  <tr>
+	<td><input class="field" id="country" disabled="true"></input></td>
+  </tr>
+</table>
+-->
+
+
+
+
+<script>
+<!-- INITIALIZE FUNCTION FOR THE CALLBACK -->
+function initialize(){
+	initMap();
+	initAutocomplete();
+}
+
+<!-- MAP GEOLOCATION -->
+
+// Note: This example requires that you consent to location sharing when
+// prompted by your browser. If you see the error "The Geolocation service
+// failed.", it means you probably did not give permission for the browser to
+// locate you.
+
+function initMap() {
+var map = new google.maps.Map(document.getElementById('map'), {
+  center: {lat: -34.397, lng: 150.644},
+  //zoom: 6
+  zoom: 16
+});
+var infoWindow = new google.maps.InfoWindow({map: map});
+
+// Try HTML5 geolocation.
+if (navigator.geolocation) {
+  navigator.geolocation.getCurrentPosition(function(position) {
+	var pos = {
+	  lat: position.coords.latitude,
+	  lng: position.coords.longitude
+	};
+
+	infoWindow.setPosition(pos);
+	infoWindow.setContent('Location found.');
+	map.setCenter(pos);
+  }, function() {
+	handleLocationError(true, infoWindow, map.getCenter());
+  });
+} else {
+  // Browser doesn't support Geolocation
+  handleLocationError(false, infoWindow, map.getCenter());
+}
+}
+
+function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+infoWindow.setPosition(pos);
+infoWindow.setContent(browserHasGeolocation ?
+					  'Error: The Geolocation service failed.' :
+					  'Error: Your browser doesn\'t support geolocation.');
+}
+
+<!-- AUTO COMPLETE -->
+
+
+// This example displays an address form, using the autocomplete feature
+// of the Google Places API to help users fill in the information.
+
+var placeSearch, autocomplete;
+var componentForm = {
+  street_number: 'short_name',
+  route: 'long_name',
+  locality: 'long_name',
+  administrative_area_level_1: 'short_name',
+  country: 'long_name',
+  postal_code: 'short_name'
+};
+
+function initAutocomplete() {
+  // Create the autocomplete object, restricting the search to geographical
+  // location types.
+  autocomplete = new google.maps.places.Autocomplete(
+      /** @type {!HTMLInputElement} */(document.getElementById('autocomplete')),
+      {types: ['geocode']});
+
+  // When the user selects an address from the dropdown, populate the address
+  // fields in the form.
+  autocomplete.addListener('place_changed', fillInAddress);
+}
+
+// [START region_fillform] -- this piece of code below is not necessary
+function fillInAddress() {
+  // Get the place details from the autocomplete object.
+  var place = autocomplete.getPlace();
+
+  for (var component in componentForm) {
+    document.getElementById(component).value = '';
+    document.getElementById(component).disabled = false;
+  }
+
+  // Get each component of the address from the place details
+  // and fill the corresponding field on the form.
+  for (var i = 0; i < place.address_components.length; i++) {
+    var addressType = place.address_components[i].types[0];
+    if (componentForm[addressType]) {
+      var val = place.address_components[i][componentForm[addressType]];
+      document.getElementById(addressType).value = val;
+    }
+  }
+}
+// [END region_fillform] -- end not necessary
+
+// [START region_geolocation]
+// Bias the autocomplete object to the user's geographical location,
+// as supplied by the browser's 'navigator.geolocation' object.
+function geolocate() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(function(position) {
+      var geolocation = {
+        lat: position.coords.latitude,
+        lng: position.coords.longitude
+      };
+      var circle = new google.maps.Circle({
+        center: geolocation,
+        radius: position.coords.accuracy
+      });
+      autocomplete.setBounds(circle.getBounds());
+    });
+  }
+}
+// [END region_geolocation]
+
+</script>
+
+<script async defer 
+	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyApI6kqh3c2bsxUuejRh7dNwRBDKyw0mxA&signed_in=true&libraries=places&callback=initialize" >
+</script>
+	
+
+
+{% endblock %}

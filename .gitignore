@@ -45,3 +45,6 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
+meetup/__pycache__/views.cpython-35.pyc
+meetup/__pycache__/views.cpython-35.pyc
+*.sqlite3

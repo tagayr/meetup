@@ -75,7 +75,61 @@
 </table>
 -->
 
+
+
+
 <script>
+<!-- INITIALIZE FUNCTION FOR THE CALLBACK -->
+function initialize(){
+	initMap();
+	initAutocomplete();
+}
+
+<!-- MAP GEOLOCATION -->
+
+// Note: This example requires that you consent to location sharing when
+// prompted by your browser. If you see the error "The Geolocation service
+// failed.", it means you probably did not give permission for the browser to
+// locate you.
+
+function initMap() {
+var map = new google.maps.Map(document.getElementById('map'), {
+  center: {lat: -34.397, lng: 150.644},
+  //zoom: 6
+  zoom: 16
+});
+var infoWindow = new google.maps.InfoWindow({map: map});
+
+// Try HTML5 geolocation.
+if (navigator.geolocation) {
+  navigator.geolocation.getCurrentPosition(function(position) {
+	var pos = {
+	  lat: position.coords.latitude,
+	  lng: position.coords.longitude
+	};
+
+	infoWindow.setPosition(pos);
+	infoWindow.setContent('Location found.');
+	map.setCenter(pos);
+  }, function() {
+	handleLocationError(true, infoWindow, map.getCenter());
+  });
+} else {
+  // Browser doesn't support Geolocation
+  handleLocationError(false, infoWindow, map.getCenter());
+}
+}
+
+function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+infoWindow.setPosition(pos);
+infoWindow.setContent(browserHasGeolocation ?
+					  'Error: The Geolocation service failed.' :
+					  'Error: Your browser doesn\'t support geolocation.');
+}
+
+<!-- AUTO COMPLETE -->
+
+
 // This example displays an address form, using the autocomplete feature
 // of the Google Places API to help users fill in the information.
 
@@ -101,7 +155,7 @@ function initAutocomplete() {
   autocomplete.addListener('place_changed', fillInAddress);
 }
 
-// [START region_fillform]
+// [START region_fillform] -- this piece of code below is not necessary
 function fillInAddress() {
   // Get the place details from the autocomplete object.
   var place = autocomplete.getPlace();
@@ -121,7 +175,7 @@ function fillInAddress() {
     }
   }
 }
-// [END region_fillform]
+// [END region_fillform] -- end not necessary
 
 // [START region_geolocation]
 // Bias the autocomplete object to the user's geographical location,
@@ -144,58 +198,11 @@ function geolocate() {
 // [END region_geolocation]
 
 </script>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAOrZKEopUVEJw_qcYuKD1A_ig1-qBQ1jw&signed_in=true&libraries=places&callback=initAutocomplete"
-	async defer></script>
 
-		
-		
-<!-- MAP GEOLOCATION
-<script>
-  // Note: This example requires that you consent to location sharing when
-  // prompted by your browser. If you see the error "The Geolocation service
-  // failed.", it means you probably did not give permission for the browser to
-  // locate you.
-
-  function initMap() {
-	var map = new google.maps.Map(document.getElementById('map'), {
-	  center: {lat: -34.397, lng: 150.644},
-	  //zoom: 6
-	  zoom: 16
-	});
-	var infoWindow = new google.maps.InfoWindow({map: map});
-
-	// Try HTML5 geolocation.
-	if (navigator.geolocation) {
-	  navigator.geolocation.getCurrentPosition(function(position) {
-		var pos = {
-		  lat: position.coords.latitude,
-		  lng: position.coords.longitude
-		};
-
-		infoWindow.setPosition(pos);
-		infoWindow.setContent('Location found.');
-		map.setCenter(pos);
-	  }, function() {
-		handleLocationError(true, infoWindow, map.getCenter());
-	  });
-	} else {
-	  // Browser doesn't support Geolocation
-	  handleLocationError(false, infoWindow, map.getCenter());
-	}
-  }
-
-  function handleLocationError(browserHasGeolocation, infoWindow, pos) {
-	infoWindow.setPosition(pos);
-	infoWindow.setContent(browserHasGeolocation ?
-						  'Error: The Geolocation service failed.' :
-						  'Error: Your browser doesn\'t support geolocation.');
-  }
-</script>
 <script async defer 
-src="https://maps.googleapis.com/maps/api/js?key=AIzaSyApI6kqh3c2bsxUuejRh7dNwRBDKyw0mxA&callback=initMap">
-</script>	
--->
-
+	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyApI6kqh3c2bsxUuejRh7dNwRBDKyw0mxA&signed_in=true&libraries=places&callback=initialize" >
+</script>
+	
 
 
 {% endblock %}

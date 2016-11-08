@@ -18,6 +18,7 @@ class ParticipantForm(ModelForm):
         self._event = kwargs.pop('event')
         super(ParticipantForm, self).__init__(*args, **kwargs)
     """
+    # this form is DEPRECATED
     class Meta:
         model = Participant
         fields = ['participant_name', 'participant_email', 'street_name', 'postal_code', 'city',

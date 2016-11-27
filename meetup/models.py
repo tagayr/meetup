@@ -5,6 +5,7 @@ import random
 import string
 import requests
 import json
+from .passwords import API_KEY
 
 
 # Create your models here.
@@ -55,8 +56,8 @@ class Event(models.Model):
         centroid = {'lat': centroid_lat,
                     'long': centroid_long}
 
-        print("================ lat", centroid["lat"])
-        print("================ long", centroid["long"])
+        # print("================ lat", centroid["lat"])
+        # print("================ long", centroid["long"])
 
         return centroid
 
@@ -67,35 +68,26 @@ class Event(models.Model):
         # there should be here a call to a function to get the lat and long of the central location
         # for all attendees
 
-        # lat = -33.8670522
-        # long = 151.1957362
-
         centroid = self.get_centroid()
-        # event_type = ""
-        if self.event_type == "Drink":
-            event_types = 'bar|cafe'  # night_club
-            keyword = "bar_beer_wine_cocktail"
+        if self.event_type == "D":
+            location_types = 'bar|cafe'  # night_club
+            # keyword = "bar_beer_wine_cocktail"
         else:
-            event_types = 'food|restaurant'
-            keyword = "restaurant+marocain+couscous+libanais+sushi+japonais+brunch+burger"
+            location_types = 'food|restaurant'
+            # keyword = "restaurant+marocain+couscous+libanais+sushi+japonais+brunch+burger"
 
         # radius is 500 by default
         radius = 1000
         lat = centroid['lat']
         long = centroid['long']
+        # this Meetup client geolocation key
+        api_key = API_KEY
 
         # nearby search
 
         url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + str(lat) + "," + str(long) + \
-              "&radius=" + str(radius) + "&types=" + event_types + \
-              "&rankby=prominence&key=AIzaSyApI6kqh3c2bsxUuejRh7dNwRBDKyw0mxA"
-
-        # url backup without keyword
-        '''
-        url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + str(lat) + "," + str(long) + \
-              "&radius=" + str(
-            radius) + "&types=" + event_types + "&name=cruise&key=AIzaSyApI6kqh3c2bsxUuejRh7dNwRBDKyw0mxA"
-        '''
+              "&radius=" + str(radius) + "&types=" + location_types + \
+              "&rankby=prominence&key=" + api_key
 
         r = requests.get(url)  # get or post
         response = r.json()
@@ -159,21 +151,6 @@ class Participant(models.Model):
         address.save()
 
 
-class GatheringLocation(models.Model):
-    event = models.ForeignKey(Event, primary_key=False, on_delete=models.CASCADE)
-    location_name = models.CharField(max_length=200, null=True)
-    location_address = models.CharField(max_length=500, null=True)
-    href = models.CharField(max_length=200, null=True)
-    votes = models.IntegerField(default=0)
-
-    def __str__(self):
-        return self.location_name
-
-    def get_href(self):
-        query = self.location_name.replace(" ", "+") + "+" + self.location_address.replace(" ", "+")
-        self.href = "http://www.google.com/search?q=" + query
-
-
 class Address(models.Model):
     event = models.ForeignKey(Event, primary_key=False, on_delete=models.CASCADE, null=True)
     street_name = models.CharField(max_length=200, null=True)
@@ -199,11 +176,6 @@ class Address(models.Model):
     def __str__(self):
         return "{} - {} {}".format(self.street_name, self.postal_code, self.city)
 
-    # get address latitude and longitude
-
-    # api call:  https://maps.googleapis.com/maps/api/geocode/json?address=
-    # 1600+Amphitheatre+Parkway,+Mountain+View,+CA&key=AIzaSyDcddwoJvWCirP_S9GjbCIVu5V8OjtKMRM
-
     def geolocate(self):
 
         if self.full_address != "":
@@ -212,8 +184,10 @@ class Address(models.Model):
             address_in_url = self.street_name + "+" + self.postal_code + "+" + self.city + "+" + self.country
 
         address_in_url.replace(' ', '+')
+        api_key = API_KEY
+
         url = "https://maps.googleapis.com/maps/api/geocode/json?address=" + address_in_url \
-              + "&key=AIzaSyDcddwoJvWCirP_S9GjbCIVu5V8OjtKMRM"
+              + "&key=" + api_key
 
         r = requests.get(url)  # get or post
         response = r.json()
@@ -224,3 +198,19 @@ class Address(models.Model):
         lat_lng = self.geolocate()
         self.latitude = lat_lng['lat']
         self.longitude = lat_lng['lng']
+
+
+class GatheringLocation(models.Model):
+    event = models.ForeignKey(Event, primary_key=False, on_delete=models.CASCADE)
+    location_name = models.CharField(max_length=200, null=True)
+    location_address = models.CharField(max_length=500, null=True)
+    href = models.CharField(max_length=200, null=True)
+    votes = models.IntegerField(default=0)
+
+    def __str__(self):
+        return self.location_name
+
+    def get_href(self):
+        query = self.location_name.replace(" ", "+") + "+" + self.location_address.replace(" ", "+")
+        self.href = "http://www.google.com/search?q=" + query
+

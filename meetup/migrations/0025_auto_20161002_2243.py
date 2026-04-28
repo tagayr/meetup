@@ -4,7 +4,6 @@ from __future__ import unicode_literals
 
 import datetime
 from django.db import migrations, models
-from django.utils.timezone import utc
 
 
 class Migration(migrations.Migration):
@@ -22,11 +21,11 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='event',
             name='created_on',
-            field=models.DateTimeField(default=datetime.datetime(2016, 10, 2, 20, 43, 9, 222536, tzinfo=utc)),
+            field=models.DateTimeField(default=datetime.datetime(2016, 10, 2, 20, 43, 9, 222536, tzinfo=datetime.timezone.utc)),
         ),
         migrations.AlterField(
             model_name='event',
             name='event_datetime',
-            field=models.DateTimeField(default=datetime.datetime(2016, 10, 2, 22, 43, 9, 223536, tzinfo=utc)),
+            field=models.DateTimeField(default=datetime.datetime(2016, 10, 2, 22, 43, 9, 223536, tzinfo=datetime.timezone.utc)),
         ),
     ]

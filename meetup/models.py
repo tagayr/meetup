@@ -5,7 +5,8 @@ import random
 import string
 import requests
 import json
-from .passwords import API_KEY
+import os
+API_KEY = os.environ.get('GOOGLE_MAPS_API_KEY', '')
 
 
 # Create your models here.

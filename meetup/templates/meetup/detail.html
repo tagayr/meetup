@@ -15,7 +15,7 @@
 
 <div class="row marketing">
 	<div class="col-lg-6">
-		{% if event.participant_set.count = 0 %}
+		{% if event.participant_set.count == 0 %}
 			<p>No participants registered at the moment.</p>
 		{% else %}
 			<h3>{{ event.participant_set.count }} participants</h3>
